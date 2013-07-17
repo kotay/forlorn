@@ -1,0 +1,71 @@
+<%= form_for(@gentleman,
+             :as => :gentleman,
+             :url => @gentleman.new_record? ? gentlemen_path : gentleman_path(@gentleman),
+             :method => @gentleman.new_record? ? "POST" : "PUT") do |f| %>
+  <% if @gentleman.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gentleman.errors.count, "error") %> prohibited this Gentleman from being saved:</h2>
+      <ul>
+      <% @gentleman.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class='pull-right well description span6'>
+    <%= @gentleman.html_description unless @gentleman.new_record? %>
+  </div>
+
+  <div class='pull-right well event-descriptions span6 hidden'>
+  </div>
+
+  <% if @gentleman.new_record? %>
+    <div class="control-group type-select">
+      <%= image_tag "spinner-arrows.gif", :class => "spinner" %>
+      <%= f.label :type, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.select :type, options_for_select(Gentleman.types.map {|type| [type.to_s.gsub(/^.*::/, ''), type.to_s] }, @gentleman.type), :class => 'span4' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'span4' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :schedule, :class => 'control-label' %>
+    <div class="controls schedule-region" data-can-be-scheduled="<%= @gentleman.can_be_scheduled? %>">
+      <%= f.select :schedule, options_for_select(Gentleman::SCHEDULES.map {|s| [s.humanize.titleize, s] }, @gentleman.schedule), :class => 'span4' %>
+      <span class='cannot-be-scheduled text-info'>This type of Worker cannot be scheduled.</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :sources, :class => 'control-label' %>
+    <div class="controls link-region" data-can-receive-events="<%= @gentleman.can_receive_events? %>">
+      <%= f.select(:source_ids,
+                   options_for_select((current_user.gentlemen - [@gentleman]).map {|s| [s.name, s.id] },
+                                      @gentleman.source_ids),
+                   {}, { :multiple => true, :size => 5, :class => 'span4 multi-select' }) %>
+      <span class='cannot-receive-events text-info'>This type of Worker cannot receive events.</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :options, :class => 'control-label' %>
+    <div class="controls">
+      <textarea rows="10" id="gentleman_options" name="gentleman[options]" class="span8 live-json-editor">
+        <%= ((@gentleman.new_record? && @gentleman.options == {}) ? @gentleman.default_options : @gentleman.options).to_json %>
+      </textarea>
+    </div>
+  </div>
+
+  <div class='form-actions' style='clear: both'>
+    <%= f.submit :class => "btn btn-primary" %>
+  </div>
+<% end %>

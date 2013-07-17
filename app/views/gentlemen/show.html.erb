@@ -1,0 +1,105 @@
+<div class='container'>
+  <div class='row'>
+    <div class='span12'>
+
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs" id="show-tabs">
+          <% if gentleman_show_view(@gentleman).present? %>
+            <li class='active'><a href="#summary" data-toggle="tab"><i class='icon-picture'></i> Summary</a></li>
+            <li><a href="#details" data-toggle="tab"><i class='icon-indent-left'></i> Details</a></li>
+          <% else %>
+            <li class='disabled'><a><i class='icon-picture'></i> Summary</a></li>
+            <li class='active'><a href="#details" data-toggle="tab"><i class='icon-indent-left'></i> Details</a></li>
+          <% end %>
+
+          <% if @gentleman.events.count > 0 %>
+            <li><%= link_to '<i class="icon-random"></i> Events'.html_safe, events_path(:gentleman => @gentleman.to_param) %></li>
+          <% end %>
+          <li><%= link_to '<i class="icon-chevron-left"></i> Back'.html_safe, gentlemen_path %></li>
+          <li><%= link_to '<i class="icon-pencil"></i> Edit'.html_safe, edit_gentleman_path(@gentleman) %></li>
+
+          <% if @gentleman.events.count > 0 %>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Actions <b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  <li>
+                    <%= link_to '<i class="icon-trash"></i> Delete all events'.html_safe, remove_events_gentleman_path(@gentleman), method: :delete, data: {confirm: 'Are you sure you want to delete ALL events for this Gentleman?'}, :tabindex => "-1" %>
+                  </li>
+              </ul>
+            </li>
+          <% end %>
+
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane <%= gentleman_show_view(@gentleman).present? ? "active" : "disabled" %>" id="summary">
+            <h2><%= @gentleman.name %> Summary</h2>
+
+            <% if gentleman_show_view(@gentleman).present? %>
+              <div class="show-view <%= gentleman_show_class(@gentleman) %>">
+                <%= render gentleman_show_view(@gentleman) %>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="tab-pane <%= gentleman_show_view(@gentleman).present? ? "" : "active" %>" id="details">
+            <h2><%= @gentleman.name %> Details</h2>
+
+            <p>
+              <b>Type:</b>
+              <%= @gentleman.short_type.titleize %>
+            </p>
+
+            <p>
+              <b>Schedule:</b>
+              <%= (@gentleman.schedule || "n/a").humanize.titleize %>
+            </p>
+
+            <p>
+              <b>Last checked:</b>
+              <% if @gentleman.cannot_be_scheduled? %>
+                N/A
+              <% else %>
+                <%= @gentleman.last_check_at ? time_ago_in_words(@gentleman.last_check_at) + " ago" : "never" %>
+              <% end %>
+            </p>
+
+            <p>
+              <b>Last event created:</b>
+              <%= @gentleman.last_event_at ? time_ago_in_words(@gentleman.last_event_at) + " ago" : "never" %>
+            </p>
+
+            <p>
+              <b>Last received event:</b>
+              <% if @gentleman.cannot_receive_events? %>
+                N/A
+              <% else %>
+                <%= @gentleman.last_receive_at ? time_ago_in_words(@gentleman.last_receive_at) + " ago" : "never" %>
+              <% end %>
+            </p>
+
+            <p>
+              <b>Event count:</b>
+              <%= link_to @gentleman.events.count, events_path(:gentleman => @gentleman.to_param) %>
+            </p>
+
+            <p>
+              <b>Working:</b>
+              <%= working @gentleman %>
+            </p>
+
+            <p>
+              <b>Options:</b>
+              <pre><%= PP.pp(@gentleman.options, "") %></pre>
+            </p>
+
+            <p>
+              <b>Memory:</b>
+              <pre><%= PP.pp(@gentleman.memory, "") %></pre>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

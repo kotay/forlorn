@@ -1,0 +1,66 @@
+<div class='container'>
+  <div class='row'>
+    <div class='span12'>
+      <div class="page-header">
+        <h2>Welcome to Sirport.me
+          <small></small>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class='container'>
+    <div class="well hero-unit">
+      <h2> What is this? </h2>
+      <p>The purpose of this application is to be a close and trusty companion to Sirportly. Sir Portly is a busy man, ensuring
+        your helpdesk is all that you need it to be. But we realise that sometimes he just can't find the time to commit to those handy little extra things you ask of him.
+      </p>
+      <p> That's where Sirport.me comes in.</p>
+      <p>Sir Portly has enlisted the help of many of his trusty workers for you to call upon and manage on your own.</p>
+      <p>
+        The idea is simple, this "handshake" application facilitates all sorts of interactions with your Sirportly instance as well as connecting your much loved helpdesk to other services you may use.</p>
+      <p>
+      Each worker is an atomic component that can receive, manipulate and send information, including connecting (shaking hands) with other workers.</p>
+      The workers can be told to work to a schedule (daily, weekly, at 1pm etc) or respond to events, be it a webhook or triggered by another worker.
+      <p>
+      <p> Think of it as the UNIX philosophy for Sirportly, many workers that do a single thing and do it well, but can be piped into other workers </p>
+      <h2> What sorts of things can I do with Sirport.me? </h2>
+      <blockquote>
+        Anything imaginable.
+      </blockquote>
+      Need Sirportly Reports sent to you every week? you will want to enlist the help of the Report Digest Worker.
+      He can be set up to run weekly, daily or whenever really.</p>
+      <p> Want to stop a macro in its tracks, doing extra work before proceeding? You'll want the macro receiver worker.</p>
+      
+      <p>The trigger worker can be used to call other workers only on certain conditions.</p>
+
+      <p>Want a dataframe to know more about the ticket being looked at? No problem, use the Dataframe Source Worker to prepare a tailored
+      payload to send to a third party before responding to Sirportly's data frame request, you can even call another worker, taking the Dataframe worker as a source and for example, attempting to find their twitter feed </p>
+
+      <p>With collaborating workers, the possibilities are endless. What's more is that you can write your own worker (and share it if you wish). Just read our documentation.</p>
+    </div>
+    <div class='row'>
+      <div class='span6'>
+        <p>
+          You have employed the help of <span class="text-success"><%= pluralize current_user.gentlemen.count, "worker" %></span>.
+        </p>
+        <%= link_to 'View <i class="icon-chevron-right"></i>'.html_safe, gentlemen_path, class: "btn btn-primary" %>
+      </div>
+
+      <div class='span6'>
+        <p>
+          Your workers have recorded
+          <span class="text-success"><%= pluralize current_user.events.recent.count, "event" %> recently</span> and
+          <span class=""><%= pluralize current_user.events.count, 'event' %> in total</span>.
+        </p>
+        <%= link_to 'View <i class="icon-chevron-right"></i>'.html_safe, events_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <div class='row' style='margin-top:250px'>
+    <div class='span10'>
+      
+    </div>
+  </div>
+</div>
